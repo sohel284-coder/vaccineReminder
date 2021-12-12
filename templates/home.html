@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {% endblock title %}
+{% block css %} {% endblock css %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
+        <center>
+            <h1>Free Online Vaccination Reminder </h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque tempore at sequi delectus quibusdam tempora asperiores doloribus odit voluptas. Animi!</p>
+        </center>
+        
+    </div>
+    <div class="col-lg-1"></div>
+
+</div>
+<div class="row mt-5" id="app">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10 card">
+        <h2 class="mt-4 mx-auto color-brown">Registration for Your Child Vaccination</h2>
+        <div class="card-body">
+            <div class="row">
+                <form class="col-lg-8" method="POST" @submit.prevent="onSubmit" novalidate>
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label for="Name" class="form-label">Full Name</label>
+                            <input required type="text" v-model="name" class="form-control" id="" aria-describedby="nameHelp">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="Dob" class="form-label">Date of Birth</label>
+                            <input required type="date" @change="dateValidation" v-model="dateOfBirth" class="form-control">
+                            <div class="text-danger text-small">[[errorDate]]</div>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-3">
+                        <div class="col-lg-6">
+                            <label for="Father" class="form-label">Father Full Name</label>
+                            <input required type="text" v-model="fatherName" class="form-control" id=""
+                                aria-describedby="fatherHelp">
+                        </div>
+                        <div class="col-sm-6">
+                            <legend class="col-form-label col-sm-4 pt-0">Gender</legend>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input required v-model="forMan" class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio1"
+                                    value="option1">
+                                <label class="form-check-label" for="inlineRadio1">Man</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input required v-model="forWomen" class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio2"
+                                    value="option2">
+                                <label class="form-check-label" for="inlineRadio2">Women</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input required v-model="forOther" class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio3"
+                                    value="option3" >
+                                <label class="form-check-label" for="inlineRadio3">Other</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group row mt-3">
+                        <div class="col-lg-6">
+                            <label for="Mother" class="form-label">Mother Full Name</label>
+                            <input required type="text" v-model="mother_mame" class="form-control" id="">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input required type="email" @change="emailValidation" v-model="email"  class="form-control" aria-describedby="emailHelp">
+                            <div class="text-small" id="email" >[[valid_email]]</div>
+                        </div>
+                    </div>
+            
+                    <div class="form-group row mt-3">
+                        <div class="col-lg-6">
+                            <label for="Address" class="form-label">Address</label>
+                            <textarea required class="form-control" v-model="address"></textarea>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input required type="phone" @change="phoneValidation" v-model="phone" class="form-control" aria-describedby="phoneHelp">
+                            <div class="text-small" id="valid" >[[valid_phone]]</div>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-4 mb-4">
+                        <div class="col-lg-12">
+                            <button type="submit" id="submitButton" class="btn btn-primary w-100 text-white">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                <form class="col-lg-4">
+                    <div class="card mt-5" style="max-height: 250px; width: auto;">
+                        <img src="{% static 'images/vac.jpg'%}" alt="">
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-1"></div>
+</div>
+<br>
+<div class="row mt-5">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10 card">
+        <div class="card-body">
+            {{vaccination.vaccination_details|safe}}
+        </div>
+    </div>
+    <div class="col-lg-1"></div>
+</div>
+{% endblock content %}
+{% block js %}
+
+{% endblock js %}
