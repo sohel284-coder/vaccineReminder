@@ -1,38 +1,49 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     {% block title %} {% endblock title %}
     <style>
-        .nav-link{
+        .nav-link {
             font-size: 22px;
             line-height: 24px;
             font-weight: 500;
         }
-        #submitButton{
+
+        #submitButton {
             font-size: 22px;
             font-weight: 500;
             line-height: 28px;
+        }
+        .loading{
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 32px; 
         }
     </style>
     {% block css %} {% endblock css %}
 
 </head>
+
 <body>
     {% include 'navbar.html' %}
     
-    <div class="container mt-5">
+    <div class="container-fluid" id="app">
+        
+        <div class="text-danger mt-5">
+            <span>[[date]]</span> <span class="text-dark">/</span> <span>[[time]]</span>
+        </div>
         {% block content %} {% endblock content %}
     </div>
-    {% include 'footer.html' %}
 
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     {% if debug %}
     <script src="{% static 'js/vue.js' %}"></script>
     {% else %}
@@ -40,6 +51,7 @@
     {% endif %}
 
     <script>
+
         var app = new Vue({
             el: "#app",
             delimiters: ['[[', ']]'],
@@ -48,41 +60,71 @@
                 fatherName: '',
                 mother_mame: '',
                 dateOfBirth: '',
-                forMan: true,
-                forWomen: false,
-                forOther: false,
                 email: '',
                 phone: '',
                 address: '',
-                gender: '',
+                gender: 'Man',
                 errorDate: '',
-                valid_email:'',
-                valid_phone: ''
-    
+                valid_email: '',
+                valid_phone: '',
+                date: '',
+                time: '',
+                alert:'',
+                load:"Loading.....",
+                loading:false,
+                isAlert:false,
+                user_vaccine_statuses: [],
+
+
             },
             mounted: function () {
-                this.checkGender();
+                this.showDateTime();
+                this.checkvaccineReminder();
+                // this.vaccinationStatus();
             },
             methods: {
-                checkGender: function () {
+                showDateTime: function () {
                     var that = this;
-                    if (that.forMan == true) {
-                        that.gender = "Man";
+                    function clock() {
+                        var today = new Date();
+                        that.date= today.toLocaleDateString();
+                        var datetime = new Date().toLocaleTimeString();
+                        that.time = datetime;
+
                     }
-                    if (that.forWoan == true) {
-                        that.gender = "Women";
-                    }
-                    if (that.forOther == true) {
-                        that.gender = "Other";
-                    }
+                    setInterval(clock, 1000);
+
                 },
-                dateValidation:function(){
+                checkvaccineReminder: function(){
+                    var that = this;
+                    let today = new Date().toLocaleDateString();
+                    var endDate = new Date('12/17/2021');
+                    endDate = endDate.toLocaleDateString();
+                    function clock(){
+                        that.showvaccineSchedule();
+                    }
+                    setInterval(clock, 86400000);
+
+                },
+                showvaccineSchedule:function(){
+                    var that = this;
+                    $.ajax({
+                        method:'GET',
+                        url:'api/vaccine-schedule',
+                    }).then(response =>{
+                        console.log(response);
+                    }).catch(errors =>{
+                        console.log(erros);
+                    });
+                },
+
+                dateValidation: function () {
                     let today = new Date().toISOString().slice(0, 10)
-                    if (Date.parse(this.dateOfBirth) > Date.parse(today)){
+                    if (Date.parse(this.dateOfBirth) > Date.parse(today)) {
                         this.errorDate = "Date will not be more than today";
                     }
                 },
-                emailValidation: function(){
+                emailValidation: function () {
                     filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
                     if (filter.test(this.email)) {
                         this.valid_email = "Email is valid "
@@ -97,10 +139,10 @@
                         $("#email").addClass('text-danger');
                         $("#submitButton").attr('disabled', true);
                     }
-                   
+
                 },
                 phoneValidation: function () {
-                    
+
                     var phoneno = /(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/
                     if (this.phone.match(phoneno)) {
                         this.valid_phone = 'Phone number is valid'
@@ -121,9 +163,9 @@
                     }
                 },
                 onSubmit: function () {
+                    this.loading = true;
                     var $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
                     var formData = {};
-                    console.log(this.motherName);
                     formData.name = this.name;
                     // formData.mother_mame = this.mother_mame;
                     formData.father_name = this.fatherName;
@@ -140,19 +182,66 @@
                         contentType: 'application/json',
                         headers: { "X-CSRFToken": '{{csrf_token}}' },
                     }).then((response) => {
-                        alert('Successfuly Registration');
-                        location.href = '/'
-    
+                        console.log(response);
+                        invalid_email = response.invalid_email;
+                        if (invalid_email){
+                            this.load = invalid_email;
+                            this.valid_email = invalid_email;
+                            $("#email").addClass('text-danger');
+                            $(".loading").addClass('text-danger');
+
+                        }
+                        else{
+                            // this.loading = false;
+                            this.isAlert = true;
+                            this.load = "successfully submitted";
+                            $("#email").addClass('text-success');
+                            this.alert = response.success;
+                            $("#alert").removeClass('alert-warning');
+                            $("#alert").addClass('alert-success');
+                            this.name = ' ';
+                            this.mother_mame = " ";
+                            this.fatherName = " ";
+                            this.dateOfBirth = " ";
+                            this.gender = " ";
+                            this.email = " ";
+                            this.phone = " ";
+                            this.address = " ";
+
+                        }
+                        
                     }).catch(errors => {
+                        this.isAlert = true;
                         console.log(errors);
-                    })
-    
-                }
-    
+                        this.load = 'Bad Request';
+                        $(".loading").addClass('text-danger');
+                        $("#alert").addClass('alert-warning');
+                        $("#alert").removeClass('alert-success');
+
+                        this.alert = errors.responseText || errors.statusText;
+                    }).finally(()=>{
+                        this.loading = false;
+                    });
+
+                },
+
+                // vaccinationStatus:function(){
+                //     $.ajax({
+                //         method:'GET',
+                //         url:'api/vaccine-registration-status/' + '{{request.user.id}}'
+                //     }).then(response =>{
+                //         console.log(response);
+                //         this.user_vaccine_statuses = response;
+                //     }).catch(erros =>{
+                //         console.log(erros);
+                //     })
+                // },
+
             },
-    
+
         });
     </script>
     {% block js %} {% endblock js %}
 </body>
+
 </html>

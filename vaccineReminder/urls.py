@@ -18,7 +18,8 @@ from django.urls import path
 from django.urls.conf import include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('', include('vaccine_reminder_app.urls'), ),
+    path('account/', include('accounts.urls'), ),
     
 ]

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {% endblock title %}
+{% block css %} {% endblock css %}
+
+{% block content %}
+
+<div class="row mt-5">
+    <div class="col-lg-3 col-md-2"></div>
+    <div class="col-lg-6 col-md-8">
+        <h2>Vaccination Status</h2>
+        <table class="table table-border table-light mt-4">
+            <thead class="py-3">
+                <tr>
+                    <th scope="col">Vaccine Name</th>
+                    <th scope="col">first Dose Date</th>
+                    <th scope="col">Second Dose Date</th>
+                    <th scope="col">Third Dose Date </th>
+                    <th scope="col"> Forth Dose Date</th>
+
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {% for status in vaccine_schedules %}
+                <tr>
+                    <td scope="row">{{status.vaccine_name.name}}</td>
+                    <td scope="row">{{status.first_dose_vaccine_date}}</td>
+                    <td scope="row">{{status.second_dose_vaccine_date}}</td>
+                    <td scope="row">{{status.third_dose_vaccine_date}}</td>
+                    <td scope="row">{{status.fourth_dose_vaccine_date}}</td>
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+        </table>
+
+    </div>
+    <div class="col-lg-3 col-md-2"></div>
+
+</div>
+{% endblock content %}
+
+{% block js %}
+ 
+
+{% endblock js %}

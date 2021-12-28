@@ -4,19 +4,39 @@
 {% block css %} {% endblock css %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-1"></div>
-    <div class="col-lg-10">
+<div class="row mb-5">
+    <div class="col-2">
+    </div>
+    <div class="col-8">
         <center>
             <h1>Free Online Vaccination Reminder </h1>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque tempore at sequi delectus quibusdam tempora asperiores doloribus odit voluptas. Animi!</p>
         </center>
         
     </div>
-    <div class="col-lg-1"></div>
-
+    <div class="col-2"></div>
 </div>
-<div class="row mt-5" id="app">
+<div class="row mb-0">
+    <div class="col-1"></div>
+    <div class="col-10 alert alert-success alert-dismissible fade show mb-0" role="alert" id="alert" v-show="isAlert">
+        <strong>[[alert]]</strong> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="col-1"></div>
+</div>
+{% if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser %}
+<div class="row">
+    <div class="col-lg-4 col-md-4"></div>
+    <div class="col-lg-4 col-md-4">
+        <div class="card m-3">
+            <a href="{% url 'vaccine_regsitration_status' %}" class="btn btn-success btn-lg py-3">Registration Status</a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4"></div>
+</div>
+{% else %}
+
+<div class="row">
     <div class="col-lg-1"></div>
     <div class="col-lg-10 card">
         <h2 class="mt-4 mx-auto color-brown">Registration for Your Child Vaccination</h2>
@@ -44,18 +64,18 @@
                             <legend class="col-form-label col-sm-4 pt-0">Gender</legend>
                             <br>
                             <div class="form-check form-check-inline">
-                                <input required v-model="forMan" class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio1"
-                                    value="option1">
+                                <input required v-model="gender"  class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                    value="Man">
                                 <label class="form-check-label" for="inlineRadio1">Man</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input required v-model="forWomen" class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio2"
-                                    value="option2">
+                                <input required v-model="gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                                    value="Women">
                                 <label class="form-check-label" for="inlineRadio2">Women</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input required v-model="forOther" class="form-check-input" type="checkbox" name="inlineRadioOptions" id="inlineRadio3"
-                                    value="option3" >
+                                <input required v-model="gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                    value="Other" >
                                 <label class="form-check-label" for="inlineRadio3">Other</label>
                             </div>
                         </div>
@@ -80,12 +100,13 @@
                         </div>
                         <div class="col-lg-6">
                             <label for="phone" class="form-label">Phone</label>
-                            <input required type="phone" @change="phoneValidation" v-model="phone" class="form-control" aria-describedby="phoneHelp">
+                            <input required type="phone" @change="phoneValidation" v-model="phone" class="form-control"  aria-describedby="phoneHelp">
                             <div class="text-small" id="valid" >[[valid_phone]]</div>
                         </div>
                     </div>
                     <div class="form-group row mt-4 mb-4">
                         <div class="col-lg-12">
+                            <div class="loading mb-3 text-center text-info"  v-if="loading">[[load]]</div>
                             <button type="submit" id="submitButton" class="btn btn-primary w-100 text-white">Submit</button>
                         </div>
                     </div>
@@ -101,6 +122,7 @@
     </div>
     <div class="col-lg-1"></div>
 </div>
+{% endif %}
 <br>
 <div class="row mt-5">
     <div class="col-lg-1"></div>
@@ -111,7 +133,11 @@
     </div>
     <div class="col-lg-1"></div>
 </div>
+
+
+
 {% endblock content %}
+
 {% block js %}
 
 {% endblock js %}

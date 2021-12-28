@@ -1,34 +1,55 @@
 <nav class="navbar navbar-expand-lg navbar-white bg-light py-4">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Logo</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-5">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-          </li>
-          
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Vaccines
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {% for vaccine in vaccines %}
-              <li><a class="dropdown-item" href="{% url 'vaccine_details' id=vaccine.id %}">{{vaccine.name}}</a></li>
-              {% endfor %}
-              
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'about' %}" tabindex="-1" >About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'contact' %}" tabindex="-1" >Contact Us</a>
-          </li>
-        </ul>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Logo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ms-5">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'vaccine_regsitration_status' %}">Registration Status</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Vaccines
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for vaccine in vaccines %}
+            <li><a class="dropdown-item" href="{% url 'vaccine_details' id=vaccine.id %}">{{vaccine.name}}</a></li>
+            {% endfor %}
+
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}" tabindex="-1">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contact' %}" tabindex="-1">Contact Us</a>
+        </li>
         
-      </div>
+        
+        <div class="nav-item">
+          {% if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser %}
+          <a class="nav-link" href="{% url 'vaccine_regsitration_status' %}" tabindex="-1">{{request.user.username}}</a>
+          {% endif %}
+        </div>
+
+        <li class="nav-item mx-2">
+          
+          {% if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser %}
+          <a href="{% url 'logout_view' %}" type="btn" class="btn btn-primary btn-lg ">Logout</a>
+          {% else %}
+          <a href="{% url 'login_page' %}" type="btn" class="btn btn-primary btn-lg ">Login</a>
+          {% endif %}
+        </li>
+      </ul>
+
     </div>
-  </nav>
+  </div>
+</nav>

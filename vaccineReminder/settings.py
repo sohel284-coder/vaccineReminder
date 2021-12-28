@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'vaccine_reminder_app',
     'rest_framework',
     'ckeditor',
+    'knox',
+    'accounts',
 ]
 
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
@@ -144,9 +146,14 @@ EMAIL_HOST_PASSWORD = '<rana.284>'
 EMAIL_USE_TLS = True
 
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
     ]
 }
+
+ACCOUNT_SID = 'ACf56216ce6fd9d577c8b71e2477721e51'
+AUTH_TOKEN = '0637c386c2006f8beffb4a8774ae8f83'
 
